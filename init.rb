@@ -1,1 +1,7 @@
-# Include hook code here
+require 'params_tools'
+
+class ActionController::Base
+
+  include ParamsTools
+
+end

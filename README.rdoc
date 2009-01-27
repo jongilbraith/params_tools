@@ -1,0 +1,17 @@
+= ParamsTools
+Some tools for making handling the rails params hash a bit easier and tidier.
+
+For now there's just one tool though - a filter to sanatize and register a default for any params.
+
+= Example
+Use like so to check for the presence params[:cars], set it if not already set, and check it's one
+of a permitted collection of valid values.
+
+  check_param(:cars) do |param|
+    param.default   = :bugatti_veyron
+    param.allowed   = [:bugatti_veyron, :pagani_zonda, :suzuki_liana, :chevrolet_lacetti]
+    param.forbidden = [:dacia_sandero, :vampire_jet_car]
+  end
+
+
+Copyright (c) 2009 Jon Gilbraith, jon@professionalnerd.com, released under the MIT license
