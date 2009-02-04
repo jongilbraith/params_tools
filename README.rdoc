@@ -1,9 +1,14 @@
 = ParamsTools
-Some tools for making handling the rails params hash a bit easier and tidier.
+Some tools for making handling the rails params hash a bit easier and tidier. Now with a dazzling array
+of not one, but two features.
 
-For now there's just one tool though - a filter to sanatize and register a default for any params.
+First is helper to use as a controller filter to sanatize and register a default for any params.
 
-= Example
+Second is an extension to url_for to make it easier to pass on other params to successive requests. A
+typical situation would be something like a search term where you want people to be able to drill down
+through several points in your page, preserving things like the query, filtering options, etc.
+
+= Example of the controller filter
 Use like so to check for the presence params[:cars], set it if not already set, and check it's one
 of a permitted collection of valid values.
 
@@ -12,6 +17,15 @@ of a permitted collection of valid values.
     param.allowed   = [:bugatti_veyron, :pagani_zonda, :suzuki_liana, :chevrolet_lacetti]
     param.forbidden = [:dacia_sandero, :vampire_jet_car]
   end
+  
+= Example of using the param preservation
+The following is an example of creating a link to books_path giving your own params :page and :per_page,
+and having :query and :filter passed on from the existing params hash.
+
+  link_to("Books", books_path(:page => 1, :per_page => 20, :preserve => [:query, :fillter]))
+
+If those params don't have values the params aren't added so you don't get your url string littered with
+those untidy empty params.
 
 
 Copyright (c) 2009 Jon Gilbraith, jon@professionalnerd.com, released under the MIT license
