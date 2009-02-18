@@ -5,9 +5,11 @@ module ParamsTools
     #
     # The following will check param[:cars] and if it's not set initialise it to the default,
     # :bugatti_veyron. If it is set but is not in the allowed array it'll also get set to the
-    # default log that it had to update it (info).
+    # default and log that it had to update it (info).
     #
-    # If you get a request with a parameter in forbidden, it'll also raise a log, at warn level.
+    # If you get a request with a parameter in forbidden, it'll also raise a log, but at warn level.
+    #
+    # You have two choices on syntax - a block style:
     #
     #   check_param(:cars) do |param|
     #     param.default   = :bugatti_veyron
@@ -15,9 +17,21 @@ module ParamsTools
     #     param.forbidden = [:dacia_sandero, :vampire_jet_car]
     #   end
     #
-    def check_param(name, &block)
+    # Or a single line options hash style syntax:
+    #   check_param(:cars, :default => :bugatti_veyron,
+    #                      :allowed => [:bugatti_veyron, :pagani_zonda, :suzuki_liana, :chevrolet_lacetti],
+    #                      :forbidden => [:dacia_sandero, :vampire_jet_car])
+    #
+    def check_param(name, options = {}, &block)
       param = ParamsDetails.new(name.to_sym)
-      yield param
+      
+      # Apply the settings applied through an options hash
+      param.default   = options[:default] if options[:default].present?
+      param.allowed   = options[:allowed] if options[:allowed].present?
+      param.forbidden = options[:forbidden] if options[:forbidden].present?
+
+      # Or get the settings from the params has if preferred
+      yield param if block_given?
     
       params[param.name] = param.default if params[param.name].blank?
       
