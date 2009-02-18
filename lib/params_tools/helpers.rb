@@ -26,19 +26,19 @@ module ParamsTools
       param = ParamsDetails.new(name.to_sym)
       
       # Apply the settings applied through an options hash
-      param.default   = options[:default] if options[:default].present?
-      param.allowed   = options[:allowed] if options[:allowed].present?
-      param.forbidden = options[:forbidden] if options[:forbidden].present?
+      param.default   = options[:default].to_s if options[:default].present?
+      param.allowed   = options[:allowed].collect(&:to_s) if options[:allowed].present?
+      param.forbidden = options[:forbidden].collect(&:to_s) if options[:forbidden].present?
 
       # Or get the settings from the params has if preferred
       yield param if block_given?
     
       params[param.name] = param.default if params[param.name].blank?
       
-      if param.forbidden.collect(&:to_s).include?(params[param.name].to_s)
+      if param.forbidden.include?(params[param.name])
         logger.warn("WARNING - request received with forbidden param - param[#{param.name}] was set to #{params[param.name]}")
         params[param.name] = param.default
-      elsif !param.allowed.collect(&:to_s).include?(params[param.name].to_s)
+      elsif !param.allowed.include?(params[param.name])
         logger.info("WARNING - request received with disallowed param - param[#{param.name}] was set to #{params[param.name]}")
         params[param.name] = param.default
       end

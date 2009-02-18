@@ -8,7 +8,7 @@ Second is an extension to url_for to make it easier to pass on other params to s
 typical situation would be something like a search term where you want people to be able to drill down
 through several points in your page, preserving things like the query, filtering options, etc.
 
-= Example of the controller filter
+== Example of the controller filter
 Use like so to check for the presence params[:cars], set it if not already set, and check it's one
 of a permitted collection of valid values.
 
@@ -18,7 +18,7 @@ of a permitted collection of valid values.
     param.forbidden = [:dacia_sandero, :vampire_jet_car]
   end
   
-= Example of using the param preservation
+== Example of using the param preservation
 The following is an example of creating a link to books_path giving your own params :page and :per_page,
 and having :query and :filter passed on from the existing params hash.
 
@@ -27,5 +27,14 @@ and having :query and :filter passed on from the existing params hash.
 If those params don't have values the params aren't added so you don't get your url string littered with
 those untidy empty params.
 
+= Conventions
+Params values should generally always be handled as strings - that's how they're formatted when you get
+them from the request and they can contain characters that aren't symbol friendly and .
+
+As a result, when it comes to param values these helpers will always work with strings. Any params passed
+in will have to_s applied to their values before doing anything with them (so you can use still symbols
+in the args), but anything returned will be / contain strings.
+
+Keys are expect to be symbols though.
 
 Copyright (c) 2009 Jon Gilbraith, jon@professionalnerd.com, released under the MIT license
